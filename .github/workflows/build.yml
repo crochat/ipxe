@@ -11,7 +11,7 @@ jobs:
         run: |
           sudo chown $(id -un) /var/cache/apt/archives
       - name: Cache packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /var/cache/apt/archives/*.deb
           key: apt-cache-${{ github.run_id }}-${{ github.run_attempt }}
@@ -39,7 +39,7 @@ jobs:
         run: |
           sudo chown $(id -un) /var/cache/apt/archives
       - name: Cache packages
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: /var/cache/apt/archives/*.deb
           key: apt-cache-${{ github.run_id }}-${{ github.run_attempt }}
@@ -75,19 +75,19 @@ jobs:
       - name: Prepare release archives
         run: |
           tar czf \
-               bin/ipxe.pxe \
-               bin/ipxe.kpxe \
-               bin/ipxe.lkrn \
-               bin/ipxe.dsk \
-               bin/ipxe.hd \
-               bin/ipxe.usb \
-               bin/ipxe.iso \
-               bin/undionly.pxe \
+               src/bin/ipxe.pxe \
+               src/bin/ipxe.kpxe \
+               src/bin/ipxe.lkrn \
+               src/bin/ipxe.dsk \
+               src/bin/ipxe.hd \
+               src/bin/ipxe.usb \
+               src/bin/ipxe.iso \
+               src/bin/undionly.pxe \
                x86-bios.tar.gz
           tar czf \
-               bin-i386-efi/ipxe.efi \
-               bin-i386-efi/ipxe.usb \
-               bin-i386-efi/ipxe.iso \
+               src/bin-i386-efi/ipxe.efi \
+               src/bin-i386-efi/ipxe.usb \
+               src/bin-i386-efi/ipxe.iso \
                x86-efi.tar.gz
       - name: Make Release Body
         id: x86
@@ -115,7 +115,7 @@ jobs:
         run: |
           sudo chown $(id -un) /var/cache/apt/archives
       - name: Cache packages
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: /var/cache/apt/archives/*.deb
           key: apt-cache-${{ github.run_id }}-${{ github.run_attempt }}
@@ -148,7 +148,7 @@ jobs:
         run: |
           sudo chown $(id -un) /var/cache/apt/archives
       - name: Cache packages
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: /var/cache/apt/archives/*.deb
           key: apt-cache-${{ github.run_id }}-${{ github.run_attempt }}
