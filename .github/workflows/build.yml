@@ -75,20 +75,22 @@ jobs:
       - name: Prepare release archives
         run: |
           tar czf \
-               src/bin/ipxe.pxe \
-               src/bin/ipxe.kpxe \
-               src/bin/ipxe.lkrn \
-               src/bin/ipxe.dsk \
-               src/bin/ipxe.hd \
-               src/bin/ipxe.usb \
-               src/bin/ipxe.iso \
-               src/bin/undionly.pxe \
-               x86-bios.tar.gz
+               x86-bios.tar.gz \
+               -C src/bin \
+               ipxe.pxe \
+               ipxe.kpxe \
+               ipxe.lkrn \
+               ipxe.dsk \
+               ipxe.hd \
+               ipxe.usb \
+               ipxe.iso \
+               undionly.pxe
           tar czf \
-               src/bin-i386-efi/ipxe.efi \
-               src/bin-i386-efi/ipxe.usb \
-               src/bin-i386-efi/ipxe.iso \
-               x86-efi.tar.gz
+               x86-efi.tar.gz \
+               -C src/bin-i386-efi \
+               ipxe.efi \
+               ipxe.usb \
+               ipxe.iso
       - name: Make Release Body
         id: x86
         run: |
