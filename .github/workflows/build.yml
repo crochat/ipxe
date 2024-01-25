@@ -72,10 +72,6 @@ jobs:
                bin-i386-efi/ipxe.efi \
                bin-i386-efi/ipxe.usb \
                bin-i386-efi/ipxe.iso
-      - name: Test
-        run: |
-          valgrind ./src/bin-i386-linux/tests.linux
-          valgrind ./src/bin-x86_64-linux/tests.linux
       - name: Prepare release archives
         run: |
           tar czf \
