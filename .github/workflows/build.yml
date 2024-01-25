@@ -3,7 +3,6 @@ name: Build
 on: push
 
 jobs:
-
   cache:
     name: Cache
     runs-on: ubuntu-latest
@@ -58,14 +57,54 @@ jobs:
           find ./src/config -type f -name '*.h.x86' -exec sh -c 'mv $0 ${0%.*}' {} \;
       - name: Build (BIOS)
         run: |
-          make -j 4 -C src
-      - name: Build (Everything)
+          make -j 4 -C src \
+               bin/ipxe.pxe \
+               bin/ipxe.kpxe \
+               bin/ipxe.lkrn \
+               bin/ipxe.dsk \
+               bin/ipxe.hd \
+               bin/ipxe.usb \
+               bin/ipxe.iso \
+               bin/undionly.pxe
+      - name: Build (EFI)
         run: |
-          make -j 4 -C src everything
+          make -j 4 -C src \
+               bin-i386-efi/ipxe.efi \
+               bin-i386-efi/ipxe.usb \
+               bin-i386-efi/ipxe.iso
       - name: Test
         run: |
           valgrind ./src/bin-i386-linux/tests.linux
           valgrind ./src/bin-x86_64-linux/tests.linux
+      - name: Prepare release archives
+        run: |
+          tar czf \
+               bin/ipxe.pxe \
+               bin/ipxe.kpxe \
+               bin/ipxe.lkrn \
+               bin/ipxe.dsk \
+               bin/ipxe.hd \
+               bin/ipxe.usb \
+               bin/ipxe.iso \
+               bin/undionly.pxe \
+               x86-bios.tar.gz
+          tar czf \
+               bin-i386-efi/ipxe.efi \
+               bin-i386-efi/ipxe.usb \
+               bin-i386-efi/ipxe.iso \
+               x86-efi.tar.gz
+      - name: Make Release Body
+        id: x86
+        run: |
+          echo Built from \#`git rev-parse --short HEAD` > release.md
+          echo ::set-output name=tag::x86-`git rev-parse --short HEAD`
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*.tar.gz"
+          bodyFile: "release.md"
+          prerelease: true
+          tag: ${{ steps.x86.outputs.tag }}
 
   arm32:
     name: ARM32
@@ -132,3 +171,4 @@ jobs:
                bin-arm64-efi/ipxe.efi \
                bin-arm64-efi/ipxe.usb \
                bin-arm64-efi/ipxe.iso
+
